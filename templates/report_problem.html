@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report an Issue</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 8px;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff; /* Soft orange background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #3a5f9f; /* Deep blue */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #3a5f9f; /* Deep blue */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #2e4f77; /* Darker blue on hover */
+        }
+        input[type="hidden"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Submit a Report</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            
+            <!-- Hidden field for location -->
+            <input type="hidden" id="location" name="location">
+            
+            <div id="map"></div>
+            <button type="submit">Submit Report</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialize the map and set the default view to a location
+        var map = L.map('map').setView([31.252973, 34.791462], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add a draggable marker
+        var marker = L.marker([31.252973, 34.791462], { draggable: true }).addTo(map);
+
+        // Update the hidden input when the marker is moved
+        marker.on('dragend', function(event) {
+            var latLng = event.target.getLatLng();
+            document.getElementById('location').value = latLng.lat + ', ' + latLng.lng;
+        });
+
+        // Allow clicking on the map to set the marker
+        map.on('click', function(event) {
+            var latLng = event.latlng;
+            marker.setLatLng(latLng);
+            document.getElementById('location').value = latLng.lat + ', ' + latLng.lng;
+        });
+    </script>
+
+</body>
+</html>

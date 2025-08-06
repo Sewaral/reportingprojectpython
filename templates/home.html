@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* Soft grey background */
+            color: #333;
+        }
+
+        header {
+            background-color: #3a5f9f; /* Deep blue */
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .greeting {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .category {
+            margin-bottom: 40px;
+        }
+
+        .category h3 {
+            font-size: 28px;
+            color: #3a5f9f; /* Deep blue */
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .category ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            gap: 20px;
+        }
+
+        .category ul li {
+            margin: 0;
+        }
+
+        .category ul li a {
+            display: block;
+            padding: 15px 25px;
+            background-color: #ff7f50; /* Soft orange */
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .category ul li a:hover {
+            background-color: #e56b47; /* Darker orange */
+            transform: translateY(-5px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #999;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease-in-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h3 {
+            color: #3a5f9f; /* Deep blue */
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content ul li a {
+            color: #ff7f50; /* Soft orange */
+            font-size: 18px;
+            text-decoration: none;
+            margin-bottom: 15px;
+            display: block;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .modal-content ul li a:hover {
+            color: #e56b47; /* Darker orange */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome to the Home Page!</h1>
+    </header>
+
+    <div class="content">
+       
+
+        <div class="category">
+            <h3>For Citizens</h3>
+            <ul>
+                <li><a href="#" onclick="openModal('citizenModal')">Login/Register as Citizen</a></li>
+            </ul>
+        </div>
+
+        <div class="category">
+            <h3>For Engineering</h3>
+            <ul>
+                <li><a href="#" onclick="openModal('engineeringModal')">Login/Register as Engineering</a></li>
+            </ul>
+        </div>
+
+        <div class="category">
+            <h3>For Workers</h3>
+            <ul>
+                <li><a href="#" onclick="openModal('workerModal')">Login/Register as Worker</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal for Citizens -->
+    <div id="citizenModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('citizenModal')">&times;</span>
+            <h3>Citizen Login and Registration</h3>
+            <p>Login or Register as a Citizen to proceed.</p>
+            <ul>
+                <li><a href="{% url 'login' %}">Login as Citizen</a></li>
+                <li><a href="{% url 'register' %}">Register as Citizen</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal for Engineering -->
+    <div id="engineeringModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('engineeringModal')">&times;</span>
+            <h3>Engineering Login and Registration</h3>
+            <p>Login or Register as an Engineer to proceed.</p>
+            <ul>
+                <li><a href="{% url 'login2' %}">Login as Engineering</a></li>
+                <li><a href="{% url 'register2' %}">Register as Engineering</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal for Workers -->
+    <div id="workerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('workerModal')">&times;</span>
+            <h3>Worker Login and Registration</h3>
+            <p>Login or Register as a Worker to proceed.</p>
+            <ul>
+                <li><a href="{% url 'login3' %}">Login as Worker</a></li>
+                <li><a href="{% url 'register3' %}">Register as Worker</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Your Website Name. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Open modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close modal if clicked outside of the modal content
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal(event.target.id);
+            }
+        }
+    </script>
+</body>
+</html>

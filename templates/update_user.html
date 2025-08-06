@@ -1,0 +1,93 @@
+{% block content %}
+    <div class="container">
+        <h1>Update User: {{ user.username }}</h1>
+        <form method="POST" class="form-container">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn">Update</button>
+        </form>
+        <a href="{% url 'user_list' %}" class="back-btn">Back to User List</a>
+    </div>
+{% endblock %}
+
+<style>
+    /* Container to center the form */
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Style the form and input fields */
+    .form-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-top: 5px;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        border-color: #007BFF;
+        outline: none;
+    }
+
+    button {
+        padding: 12px 30px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        padding: 12px 30px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 6px;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+        background-color: #218838;
+    }
+</style>

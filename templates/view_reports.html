@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opened Reports</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+        .reports-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .report {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+            border-left: 5px solid #007BFF;
+        }
+        .report h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #007BFF;
+        }
+        .report p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .report .details {
+            font-size: 0.95em;
+            color: #555;
+        }
+        .report .status {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .status.open {
+            color: #ffc107; /* Yellow for open */
+        }
+        .status.in_progress {
+            color: #ff8500; /* Orange for in-progress */
+        }
+        .status.done {
+            color: #28a745; /* Green for done */
+        }
+        .no-reports {
+            text-align: center;
+            font-size: 1.2em;
+            color: #555;
+        }
+        .back-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            font-size: 1.1em;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>All Open Reports</h1>
+
+{% if reports %}
+    <div class="reports-container">
+        {% for report in reports %}
+            <div class="report">
+                <h3>Report: {{ report.description }}</h3>
+                <p><strong>Location:</strong> {{ report.latitude }}, {{ report.longitude }}</p>
+                <p class="details"><strong>Status:</strong> <span class="status {{ report.status|lower }}">{{ report.status }}</span></p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-reports">No opened reports available at the moment.</p>
+{% endif %}
+
+
+</body>
+</html>

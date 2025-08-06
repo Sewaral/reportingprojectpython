@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 90vh;
+            width: 450px; /* Increased width for a larger chat box */
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            padding: 20px; /* Added padding for better spacing */
+        }
+
+        header {
+            background-color: #3a5f9f;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 20px; /* Added margin for spacing between header and chat window */
+        }
+
+        header h1 {
+            font-size: 30px; /* Increased font size for better visibility */
+            font-weight: 600;
+            margin: 0;
+        }
+
+        #chat-window {
+            padding: 15px;
+            height: 70%;
+            overflow-y: scroll;
+            flex-grow: 1;
+            background-color: #e5e5e5;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px; /* Increased margin for more space between messages */
+        }
+
+        .message .username {
+            font-weight: bold;
+            margin-right: 15px; /* Increased margin for more space */
+            color: #3a5f9f;
+            font-size: 14px; /* Increased font size */
+        }
+
+        .message .content {
+            background-color: #dcf8c6;
+            padding: 12px 18px; /* Larger padding for the content */
+            border-radius: 16px; /* More rounded corners */
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 16px; /* Increased font size for content */
+        }
+
+        .message.sent .content {
+            background-color: #34b7f1;
+            margin-left: auto;
+            color: white;
+        }
+
+        .message.received .content {
+            background-color: #e4e6eb;
+            color: #4f4f4f;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background-color: #ffffff;
+            border-top: 1px solid #ddd;
+        }
+
+        input, textarea {
+            padding: 15px; /* Increased padding for larger inputs */
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px; /* Increased margin for better spacing */
+            width: 100%;
+            font-size: 16px; /* Increased font size for inputs */
+        }
+
+        button {
+            background-color: #ff7f50;
+            color: white;
+            padding: 15px; /* Larger padding for the button */
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px; /* Increased font size */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #e56b47;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 12px 18px; /* Larger padding for the logout button */
+            font-size: 16px; /* Larger font size */
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn:hover {
+            background-color: #e60000;
+        }
+
+        /* Responsive Design */
+        @media only screen and (max-width: 600px) {
+            #chat-container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            header h1 {
+                font-size: 24px; /* Adjusted for smaller screens */
+            }
+
+            .message .content {
+                font-size: 14px; /* Adjusted for smaller screens */
+            }
+
+            input, textarea, button {
+                font-size: 16px; /* Adjusted for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <header>
+        <h1>Welcome to the Chat!</h1>
+    </header>
+
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <div id="chat-window">
+        {% for message in messages %}
+            <div class="message {% if message.name == 'Anonymous' %}sent{% else %}received{% endif %}">
+                <span class="username">{{ message.name }}:</span>
+                <span class="content">{{ message.content }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form id="chat-form">
+        <input type="text" id="username" placeholder="Enter your name" required>
+        <textarea id="message" rows="4" placeholder="Type your message" required></textarea>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const csrftoken = document.querySelector('[name=csrf-token]').content;
+
+        $.ajaxSetup({
+            headers: { 'X-CSRFToken': csrftoken }
+        });
+
+        $('#chat-form').on('submit', function (e) {
+            e.preventDefault();
+
+            const username = $('#username').val();
+            const content = $('#message').val();
+
+            if (username && content) {
+                $.post("{% url 'send_message' %}", {
+                    username: username,
+                    content: content
+                }, function (data) {
+                    if (data.status === 'success') {
+                        $('#chat-window').append(`
+                            <div class="message sent">
+                                <span class="username">${username}:</span>
+                                <span class="content">${content}</span>
+                            </div>
+                        `);
+                        $('#message').val('');
+                        $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                    }
+                });
+            }
+        });
+    });
+
+    function logout() {
+        sessionStorage.clear();
+        window.location.href = '/'; // Redirect to the homepage or logout page
+    }
+</script>
+
+</body>
+</html>
